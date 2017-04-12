@@ -1,27 +1,27 @@
 <html>
 
 <head>
-  <title> dashboard </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
-  <script>
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyB84XxilPHdBI5JhZmG9s02gfoBtdYqk5w",
-      authDomain: "bodyfatcal-747ad.firebaseapp.com",
-      databaseURL: "https://bodyfatcal-747ad.firebaseio.com",
-      storageBucket: "bodyfatcal-747ad.appspot.com",
-      messagingSenderId: "390686966560"
-    };
-    var app = firebase.initializeApp(config);
-    var provider = new firebase.auth.GoogleAuthProvider();
-    provider.addScope('https://www.googleapis.com/auth/plus.login');
-  </script>
+    <title> dashboard </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyB84XxilPHdBI5JhZmG9s02gfoBtdYqk5w",
+            authDomain: "bodyfatcal-747ad.firebaseapp.com",
+            databaseURL: "https://bodyfatcal-747ad.firebaseio.com",
+            storageBucket: "bodyfatcal-747ad.appspot.com",
+            messagingSenderId: "390686966560"
+        };
+        var app = firebase.initializeApp(config);
+        var provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('https://www.googleapis.com/auth/plus.login');
+    </script>
 </head>
 <style>
-  label {
-    font-weight: lighter;
-  }
+    label {
+        font-weight: lighter;
+    }
 </style>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -29,620 +29,791 @@
 <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase-database.js"></script>
-
 <script>
-    var db = app.database();
-    var userID
-    var bmiRef
-    db.ref('sample').set({
-      key: "value"
-    });
-
-    if (!app.auth().currentUser) {
-
-    }
-
-    function calCatFromBMI(bmi, gender) {
-      var cat = ""
-      if (gender == "female") {
-        if (bmi < 17.5)
-          cat = "Anorexia"
-        else if (bmi < 19.1)
-          cat = "Underweight"
-        else if (bmi > 19.1 && bmi <= 25.8)
-          cat = "In normal range"
-        else if (bmi > 25.8 && bmi <= 27.3)
-          cat = "Marginally overweight"
-        else if (bmi > 27.3 && bmi <= 32.3)
-          cat = "Overweight"
-        else if (bmi > 32.3 && bmi <= 35)
-          cat = "Obese"
-        else if (bmi > 35 && bmi <= 40)
-          cat = "Severely obese"
-        else if (bmi > 40 && bmi <= 50)
-          cat = "Morbidly obese"
-        else if (bmi > 50)
-          cat = "Super obese"
-      } else if (gender == "male") {
-        if (bmi <= 17.5)
-          cat = "Anorexia"
-        else if (bmi <= 20.7)
-          cat = "Underweight"
-        else if (bmi > 20.7 && bmi <= 26.4)
-          cat = "In normal range"
-        else if (bmi > 26.4 && bmi <= 27.8)
-          cat = "Marginally overweight"
-        else if (bmi > 27.8 && bmi <= 31.1)
-          cat = "Overweight"
-        else if (bmi > 31.1 && bmi <= 35)
-          cat = "Obese"
-        else if (bmi > 35 && bmi <= 40)
-          cat = "Severely obese"
-        else if (bmi > 40 && bmi <= 50)
-          cat = "Morbidly obese"
-        else if (bmi > 50)
-          cat = "Super obese"
-      }
-
-      return cat
-    }
-
-    $(document).ready(function () {
-      function showHistory(bmiRef) {
-        bmiRef.on('child_added', function (data) {
-          // addCommentElement(postElement, data.key, data.val().text, data.val().author);
-          $("#history").append($(`<p>${JSON.stringify(data)}</p>`))
+        var db = app.database();
+        var userID
+        var bmiRef
+        db.ref('sample').set({
+            key: "value"
         });
-      }
 
-      app.auth().onAuthStateChanged(function (user) {
-        if (user) {
-          userID = user.uid;
-          var email = user.email ? user.email : ""
-          console.log("user is:" + userID);
-          bmiRef = db.ref('users/' + userID + '/bmi').push();
-          $("body").css('visibility', 'visible');
-          $(".navbar-right").prepend($(`<li><a hreaf="# "><span class="glyphicon "></span>${email}</a></li>`))
-          showHistory(db.ref('users/' + userID + '/bmi'))
-        } else {
-          var segs = window.location.pathname.split('/')
-          segs[segs.length - 1] = 'index.html'
-          window.location = segs.join('/');
+        if (!app.auth().currentUser) {
 
         }
-      });
 
-      $("#logout").click(function (event) {
-        event.preventDefault();
-        app.auth().signOut().then(function () {
-          var segs = window.location.pathname.split('/')
-          segs[segs.length - 1] = 'index.html'
-          window.location = segs.join('/');
+        function calCatFromBMI(bmi, gender) {
+            var cat = ""
+            if (gender == "female") {
+                if (bmi < 17.5)
+                    cat = "Anorexia"
+                else if (bmi < 19.1)
+                    cat = "Underweight"
+                else if (bmi > 19.1 && bmi <= 25.8)
+                    cat = "In normal range"
+                else if (bmi > 25.8 && bmi <= 27.3)
+                    cat = "Marginally overweight"
+                else if (bmi > 27.3 && bmi <= 32.3)
+                    cat = "Overweight"
+                else if (bmi > 32.3 && bmi <= 35)
+                    cat = "Obese"
+                else if (bmi > 35 && bmi <= 40)
+                    cat = "Severely obese"
+                else if (bmi > 40 && bmi <= 50)
+                    cat = "Morbidly obese"
+                else if (bmi > 50)
+                    cat = "Super obese"
+            } else if (gender == "male") {
+                if (bmi <= 17.5)
+                    cat = "Anorexia"
+                else if (bmi <= 20.7)
+                    cat = "Underweight"
+                else if (bmi > 20.7 && bmi <= 26.4)
+                    cat = "In normal range"
+                else if (bmi > 26.4 && bmi <= 27.8)
+                    cat = "Marginally overweight"
+                else if (bmi > 27.8 && bmi <= 31.1)
+                    cat = "Overweight"
+                else if (bmi > 31.1 && bmi <= 35)
+                    cat = "Obese"
+                else if (bmi > 35 && bmi <= 40)
+                    cat = "Severely obese"
+                else if (bmi > 40 && bmi <= 50)
+                    cat = "Morbidly obese"
+                else if (bmi > 50)
+                    cat = "Super obese"
+            }
 
-        }).catch(function (error) {
-          alert("signout not successfull ")
-        });
-      });
-
-      $("#cal1").submit(function (event) {
-        event.preventDefault();
-
-        // var heightInInches = ($("#cal1 feet").val() * 12 + $("cal1 inches").val());
-
-
-        $("#cal1 bmi").val(bmi)
-
-
-        var bmiObj = {}
-        var formData = $("#cal1").serializeArray().map(function (obj) {
-          bmiObj[obj.name] = obj.value;
-        });
-
-        console.log(JSON.stringify(bmiObj, null, 2))
-        var heightInInches = (Number(bmiObj.feet) * 12) + Number(bmiObj.inches);
-        var bmi = (Number(bmiObj.weight) / (heightInInches * heightInInches)) * 703
-        var bmr
-        var cat = ""
-
-
-        bmiObj.gender = $('input:radio[name=gender]:checked').val();
-
-        if (bmiObj.gender == "female") {
-          bmr = 655 + (4.35 * Number(bmiObj.weight) + (4.7 * bmiObj.inches) - (4.7 * Number(bmiObj.age)))
-        } else if (bmiObj.gender == "male") {
-          bmr = 66 + (6.23 * Number(bmiObj.weight) + (12.7 * bmiObj.inches) - (6.8 * Number(bmiObj.age)))
+            return cat
         }
 
-        bmi = bmi ? bmi.toFixed(2) : ""
-        $("#cal1 [name=bmi]").val(bmi);
-        bmiObj.bmi = bmi;
+        $(document).ready(function () {
 
-        cat = calCatFromBMI(bmi, bmiObj.gender)
+            var method = {
+                "navyTape": "Navy Type",
+                "BMI/BMR": "BMI/BMR",
+                "caliper7": "Jackson/Pollock 7 Caliper Method",
+                "caliper3": "Jackson/Pollock 3 Caliper Method",
+                "caliper4": "Jackson/Pollock 4 Caliper Method"
+            }
 
-        $("#cal1 #category").hide()
-        $("#cal1 #category").text(cat)
-        $("#cal1 #category").fadeIn("slow")
-        bmiObj.category = cat
+            function showHistory(bmiRef) {
+                bmiRef.on('child_added', function (data) {
+                    // addCommentElement(postElement, data.key, data.val().text, data.val().author);
+                    data = data.val()
+                    console.log(data)
+                    if (data.method && data.time && (data.bodyFat || data.bmi || data.bmr)) {
+                        var result = ""
+                        if (data.method == 'BMI/BMR') {
+                            result = "BMI: " + (data.bmi ? data.bmi : "") + " BMR: " + (data.bmr ? data.bmr : "")
+                        } else {
+                            result = "Body Fat: " + (data.bodyFat ? data.bodyFat : "") + "%"
+                        }
+                        var row = `<tr> <td>${(new Date(data.time)).toString().split(" ").slice(0, 4).join(" ")}</td><td>${method[data.method]}</td> <td>${result}</td></tr>`
+                    }
+
+                    $("#historyTable").append(row)
+
+                });
+            }
+
+            app.auth().onAuthStateChanged(function (user) {
+                if (user) {
+                    userID = user.uid;
+                    var email = user.email ? user.email : ""
+                    console.log("user is:" + userID);
+                    bmiRef = db.ref('users/' + userID + '/bmi').push();
+                    $("body").css('visibility', 'visible');
+                    $(".navbar-right").prepend($(`< li > <a hreaf="# " > <span class="glyphicon " > </span>${email}</a> </li>`))
+                    showHistory(db.ref('users/' + userID + '/bmi'))
+                } else {
+                    var segs = window.location.pathname.split('/')
+                    segs[segs.length - 1] = 'index.html'
+                    window.location = segs.join('/');
+
+                }
+            });
+
+            $("#logout").click(function (event) {
+                event.preventDefault();
+                app.auth().signOut().then(function () {
+                    var segs = window.location.pathname.split('/')
+                    segs[segs.length - 1] = 'index.html'
+                    window.location = segs.join('/');
+
+                }).catch(function (error) {
+                    alert("signout not successfull ")
+                });
+            });
+
+            $("#cal1").submit(function (event) {
+                event.preventDefault();
+
+                // var heightInInches = ($("#cal1 feet").val() * 12 + $("cal1 inches").val());
 
 
-        bmr = bmr ? bmr.toFixed(2) : ""
-        $("#cal1 [name=bmr]").val(bmr);
-        bmiObj.bmr = bmr;
-
-        bmiObj.method = "BMI/BMR";
-
-        bmiObj.time = Date.now();
-        bmiRef.set(bmiObj);
-      });
+                $("#cal1 bmi").val(bmi)
 
 
-      $("#cal2").submit(function (event) {
-        var bodyFat = ""
-        event.preventDefault();
-        var bmiObj = {}
-        var formData = $("#cal2").serializeArray().map(function (obj) {
-          if (!isNaN(obj.value)) {
-            bmiObj[obj.name] = Number(obj.value);
-          } else {
-            bmiObj[obj.name] = obj.value;
-          }
+                var bmiObj = {}
+                var formData = $("#cal1").serializeArray().map(function (obj) {
+                    bmiObj[obj.name] = obj.value;
+                });
+
+                console.log(JSON.stringify(bmiObj, null, 2))
+                var heightInInches = (Number(bmiObj.feet) * 12) + Number(bmiObj.inches);
+                var bmi = (Number(bmiObj.weight) / (heightInInches * heightInInches)) * 703
+                var bmr
+                var cat = ""
+
+
+                bmiObj.gender = $('input:radio[name=gender]:checked').val();
+
+                if (bmiObj.gender == "female") {
+                    bmr = 655 + (4.35 * Number(bmiObj.weight) + (4.7 * bmiObj.inches) - (4.7 * Number(bmiObj.age)))
+                } else if (bmiObj.gender == "male") {
+                    bmr = 66 + (6.23 * Number(bmiObj.weight) + (12.7 * bmiObj.inches) - (6.8 * Number(bmiObj.age)))
+                }
+
+                bmi = bmi ? bmi.toFixed(2) : ""
+                $("#cal1 [name=bmi]").val(bmi);
+                bmiObj.bmi = bmi;
+
+                cat = calCatFromBMI(bmi, bmiObj.gender)
+
+                $("#cal1 #category").hide()
+                $("#cal1 #category").text(cat)
+                $("#cal1 #category").fadeIn("slow")
+                bmiObj.category = cat
+
+
+                bmr = bmr ? bmr.toFixed(2) : ""
+                $("#cal1 [name=bmr]").val(bmr);
+                bmiObj.bmr = bmr;
+
+                bmiObj.method = "BMI/BMR";
+
+                bmiObj.time = Date.now();
+                bmiRef.set(bmiObj);
+                bmiRef = db.ref('users/' + userID + '/bmi').push();
+
+            });
+
+
+            $("#cal2").submit(function (event) {
+                var bodyFat = ""
+                event.preventDefault();
+                var bmiObj = {}
+                var formData = $("#cal2").serializeArray().map(function (obj) {
+                    if (!isNaN(obj.value)) {
+                        bmiObj[obj.name] = Number(obj.value);
+                    } else {
+                        bmiObj[obj.name] = obj.value;
+                    }
+                });
+
+                console.log(JSON.stringify(bmiObj));
+
+                if (bmiObj.gender == "male") {
+                    var f1 = (bmiObj.weight * 1.082) + 94.42
+                    var f2 = bmiObj.waist * 4.15;
+                    var leanBM = f1 - f2;
+                } else if (bmiObj.gender == "female") {
+                    var f1 = (bmiObj.weight * 0.732) + 8.987;
+                    var f2 = (bmiObj.wrist) / 3.140;
+                    var f3 = (bmiObj.waist) * 0.157;
+                    var f4 = (bmiObj.hip) * 0.249;
+                    var f5 = (bmiObj.forearm) * 0.434;
+                    var leanBM = f1 + f2 - f3 - f4 + f5;
+                }
+
+                var bodyFatWeight = bmiObj.weight - leanBM;
+                bodyFat = (bodyFatWeight * 100) / bmiObj.weight;
+
+                bodyFat = bodyFat ? bodyFat.toFixed(2) : "";
+                $("#cal2 [name=bodyFat]").val(bodyFat);
+
+                bmiObj.bodyFat = bodyFat;
+                bmiObj.method = "navyTape";
+
+                bmiObj.time = Date.now();
+                bmiRef.set(bmiObj);
+                bmiRef = db.ref('users/' + userID + '/bmi').push();
+
+            })
+
+
+            $("#caliper7").submit(function (event) {
+                var bodyFat = ""
+                event.preventDefault();
+                var bmiObj = {}
+                var formData = $("#caliper7").serializeArray().map(function (obj) {
+                    if (!isNaN(obj.value)) {
+                        bmiObj[obj.name] = Number(obj.value);
+                    } else {
+                        bmiObj[obj.name] = obj.value;
+                    }
+                });
+
+                console.log(JSON.stringify(bmiObj));
+                var sum = bmiObj.chest + bmiObj.abdominal + bmiObj.thigh + bmiObj.tricep + bmiObj.subscapular + bmiObj.suprailic + bmiObj.midaxillary;
+                if (bmiObj.gender == "male") {
+                    bodyFat = 495 / (1.112 - (0.00043499 * sum) + (0.00000055 * sum * sum) - (0.00028826 * bmiObj.age)) - 450
+                } else if (bmiObj.gender == "female") {
+                    bodyFat = 495 / (1.097 - (0.00046971 * sum) + (0.00000056 * sum * sum) - (0.00012828 * bmiObj.age)) - 450
+                }
+
+
+                bodyFat = bodyFat ? bodyFat.toFixed(2) : "";
+                $("#caliper7 [name=bodyFat]").val(bodyFat);
+
+                bmiObj.bodyFat = bodyFat;
+                bmiObj.method = "caliper7";
+
+                bmiObj.time = Date.now();
+                bmiRef.set(bmiObj);
+                bmiRef = db.ref('users/' + userID + '/bmi').push();
+
+            })
+
+            $("#caliper3").submit(function (event) {
+                var bodyFat = ""
+                event.preventDefault();
+                var bmiObj = {}
+                var formData = $("#caliper3").serializeArray().map(function (obj) {
+                    if (!isNaN(obj.value)) {
+                        bmiObj[obj.name] = Number(obj.value);
+                    } else {
+                        bmiObj[obj.name] = obj.value;
+                    }
+                });
+
+                console.log(JSON.stringify(bmiObj));
+                var sum = bmiObj.chest + bmiObj.abdominal + bmiObj.thigh;
+
+                if (bmiObj.gender == "male") {
+                    bodyFat = 495 / (1.10938 - (0.0008267 * sum) + (0.0000016 * sum * sum) - (0.0002574 * bmiObj.age)) - 450
+                } else if (bmiObj.gender == "female") {
+                    bodyFat = 495 / (1.089733 - (0.0009245 * sum) + (0.0000025 * sum * sum) - (0.0000979 * bmiObj.age)) - 450
+                }
+
+                bodyFat = bodyFat ? bodyFat.toFixed(2) : "";
+                $("#caliper3 [name=bodyFat]").val(bodyFat);
+
+                bmiObj.bodyFat = bodyFat;
+                bmiObj.method = "caliper3";
+
+                bmiObj.time = Date.now();
+                bmiRef.set(bmiObj);
+                bmiRef = db.ref('users/' + userID + '/bmi').push();
+
+            })
+
+            $("#caliper4").submit(function (event) {
+                var bodyFat = ""
+                event.preventDefault();
+                var bmiObj = {}
+                var formData = $("#caliper4").serializeArray().map(function (obj) {
+                    if (!isNaN(obj.value)) {
+                        bmiObj[obj.name] = Number(obj.value);
+                    } else {
+                        bmiObj[obj.name] = obj.value;
+                    }
+                });
+
+                console.log(JSON.stringify(bmiObj));
+                var sum = bmiObj.chest + bmiObj.abdominal + bmiObj.thigh + bmiObj.suprailic;
+
+                if (bmiObj.gender == "male") {
+                    bodyFat = (0.29288 * sum) - (0.0005 * sum) + (0.15845 * bmiObj.age) - 5.76377;
+                } else if (bmiObj.gender == "female") {
+                    bodyFat = (0.29669 * sum) - (0.00043 * sum) + (0.02963 * bmiObj.age) + 1.4072;
+                }
+
+                bodyFat = bodyFat ? bodyFat.toFixed(2) : "";
+                $("#caliper4 [name=bodyFat]").val(bodyFat);
+
+                bmiObj.bodyFat = bodyFat;
+                bmiObj.method = "caliper4";
+
+                bmiObj.time = Date.now();
+                bmiRef.set(bmiObj);
+                bmiRef = db.ref('users/' + userID + '/bmi').push();
+
+            })
+
+
+
+
+            $(".clear").click(function (event) {
+                $(this).closest('form').find("input[type=number]").val("");
+                $(this).closest('form').find("input[type=radio]").prop('checked', false);
+                $("#category").text("");
+            })
+
+            $("#InstructionalVideoDiv").hide()
+            $("#videoPullDown").click(function () {
+                $("#InstructionalVideoDiv").slideToggle();
+                console.log("slide toggled the vide div")
+                $(this).find("span").toggleClass("glyphicon-menu-down glyphicon-menu-up")
+            })
+
+
         });
-
-        console.log(JSON.stringify(bmiObj));
-
-        if (bmiObj.gender == "male") {
-          var f1 = (bmiObj.weight * 1.082) + 94.42
-          var f2 = bmiObj.waist * 4.15;
-          var leanBM = f1 - f2;
-        } else if (bmiObj.gender == "female") {
-          var f1 = (bmiObj.weight * 0.732) + 8.987;
-          var f2 = (bmiObj.wrist) / 3.140;
-          var f3 = (bmiObj.waist) * 0.157;
-          var f4 = (bmiObj.hip) * 0.249;
-          var f5 = (bmiObj.forearm) * 0.434;
-          var leanBM = f1 + f2 - f3 - f4 + f5;
-        }
-
-        var bodyFatWeight = bmiObj.weight - leanBM;
-        bodyFat = (bodyFatWeight * 100) / bmiObj.weight;
-
-        bodyFat = bodyFat ? bodyFat.toFixed(2) : "";
-        $("#cal2 [name=bodyFat]").val(bodyFat);
-
-        bmiObj.bodyFat = bodyFat;
-        bmiObj.method = "navyTape";
-
-        bmiObj.time = Date.now();
-        bmiRef.set(bmiObj);
-      })
-
-      $(".clear").click(function (event) {
-        $(this).closest('form').find("input[type=number]").val("");
-        $(this).closest('form').find("input[type=radio]").prop('checked', false);
-        $("#category").text("");
-      })
-
-      $("#InstructionalVideoDiv").hide()
-      $("#videoPullDown").click(function () {
-        $("#InstructionalVideoDiv").slideToggle();
-        console.log("slide toggled the vide div")
-        $(this).find("span").toggleClass("glyphicon-menu-down glyphicon-menu-up")
-      })
-
-
-    });
 
 </script>
 
-
 <body style="visibility: hidden">
-
-  <nav class=" navbar navbar-inverse ">
-    <div class="container-fluid ">
-      <div class="navbar-header ">
-        <a class="navbar-brand " href="# ">Body Fat</a>
-      </div>
-      <ul class="nav navbar-nav ">
-        <li class="active "><a href="# ">Home</a></li>
-        <li class="dropdown "><a class="dropdown-toggle " data-toggle="dropdown " href="# ">Page 1 <span class="caret "></span></a>
-          <ul class="dropdown-menu ">
-            <li><a href="# ">Page 1-1</a></li>
-            <li><a href="# ">Page 1-2</a></li>
-            <li><a href="# ">Page 1-3</a></li>
-          </ul>
-        </li>
-        <li><a href="# ">Page 2</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <!--<li><a href="# "><span class="glyphicon glyphicon-user "></span> Sign Up</a></li>-->
-        <li><a hreaf="# " id="logout"><span class="glyphicon glyphicon-log-out "></span>Log out</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <div class="container ">
-    <!--<h3>Right Aligned Navbar</h3>-->
-    <!--<p>The .navbar-right class is used to right-align navigation bar buttons.</p>-->
-    <div class="row col-md-12">
-      <ul class="nav nav-tabs">
-        <li><a data-toggle="tab" href="#tab1">BMI/BMR</a></li>
-        <li><a data-toggle="tab" href="#menu1">Navy Tape</a></li>
-        <li class="active"><a data-toggle="tab" href="#menu2">Caliper Method</a></li>
-        <li><a data-toggle="tab" href="#menu3">Calorie Counter</a></li>
-        <li><a data-toggle="tab" href="#menu4">History</a></li>
-        <!--<li><a data-toggle="tab" href="#menu3">Calorie Counter</a></li>-->
-      </ul>
-
-      <div class="tab-content">
-        <div id="tab1" class="tab-pane fade in ">
-          <!--<h3>HOME</h3>-->
-          <form id="cal1" class="form-inline">
-            <div> &nbsp</div>
-
-            <div class="row">
-              <label class="col-sm-2 col-form-label col-form-label-lg">Your Height:</label>
-
-              <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-              <label>feet </label>
-              <input type="number" name="inches" step="any" class="form-control mb-2 mr-sm-2 mb-sm-0" required id="inches" placeholder="Inches"
-                value="10">
-              <label>inches  </label>
-
+    <nav class=" navbar navbar-inverse ">
+        <div class="container-fluid ">
+            <div class="navbar-header ">
+                <a class="navbar-brand " href="# ">Body Fat</a>
             </div>
-            <div> &nbsp</div>
-            <div class="row">
-
-              <label class="col-sm-2 col-form-label col-form-label-lg"> Weight:</label>
-              <input type="number" name="weight" step="any" class="form-control" required id="weight" placeholder="Your Weight" value="170">
-              <label>Pounds</label>
-            </div>
-            <div> &nbsp</div>
-
-            <div class="row">
-              <label class="col-sm-2 col-form-label col-form-label-lg">You are:</label>
-              <label class="radio-inline">
-                <input type="radio" name="gender" value="female" required>Female
-                 </label>
-              <label class="radio-inline">
-                <input type="radio" name="gender" value="male" required>male
-              </label>
-
-            </div>
-            <div> &nbsp</div>
-            <div class="row">
-
-              <label class="col-sm-2 col-form-label col-form-label-lg">Your Age:</label>
-              <input type="number" step="any" name="age" required class="form-control" id="age" placeholder="Your Age" value="27">
-              <label>Years</label>
-            </div>
-
-            <div> &nbsp</div>
-            <div class="row">
-
-              <label class="col-sm-2 col-form-label col-form-label-lg">Your BMI:</label>
-              <input type="number" step="any" name="bmi" class="form-control" id="bmi" placeholder="">
-              <!--<label>Years</label>-->
-              <span class="label label-default" id="category"></span>
-            </div>
-
-            <div> &nbsp</div>
-            <div class="row">
-
-              <label class="col-sm-2 col-form-label col-form-label-lg">Your BMR:</label>
-              <input type="number" step="any" name="bmr" class="form-control" id="bmr" placeholder="">
-              <!--<label>Years</label>-->
-            </div>
-            <div> &nbsp</div>
-
-            <button id="cal1-button" type="submit" class="btn btn-primary">Calculate</button>
-            <button class="btn btn-primary clear">Clear</button>
-          </form>
+            <ul class="nav navbar-nav ">
+                <li class="active "><a href="# ">Home</a></li>
+                <li class="dropdown "><a class="dropdown-toggle " data-toggle="dropdown " href="# ">Page 1 <span class="caret "></span></a>
+                    <ul class="dropdown-menu ">
+                        <li><a href="# ">Page 1-1</a></li>
+                        <li><a href="# ">Page 1-2</a></li>
+                        <li><a href="# ">Page 1-3</a></li>
+                    </ul>
+                </li>
+                <li><a href="# ">Page 2</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <!--<li><a href="# "><span class="glyphicon glyphicon-user "></span> Sign Up</a></li>-->
+                <li><a hreaf="# " id="logout"><span class="glyphicon glyphicon-log-out "></span>Log out</a></li>
+            </ul>
         </div>
-        <div id="menu1" class="tab-pane fade">
-          <form id="cal2" class="form-inline">
-            <div> &nbsp</div>
-
-            <div class="row">
-              <label class="col-sm-2 col-form-label col-form-label-lg">Your Height:</label>
-
-              <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-              <label>feet </label>
-              <input type="number" name="inches" step="any" class="form-control mb-2 mr-sm-2 mb-sm-0" required id="inches" placeholder="Inches"
-                value="10">
-              <label>inches  </label>
-
-            </div>
-            <div> &nbsp</div>
-            <div class="row">
-
-              <label class="col-sm-2 col-form-label col-form-label-lg"> Weight:</label>
-              <input type="number" name="weight" step="any" class="form-control" required id="weight" placeholder="Your Weight" value="170">
-              <label>Pounds</label>
-            </div>
-            <div> &nbsp</div>
-
-            <div class="row">
-              <label class="col-sm-2 col-form-label col-form-label-lg">You are:</label>
-              <label class="radio-inline">
-                <input type="radio" name="gender" value="female" required>Female
-                 </label>
-              <label class="radio-inline">
-                <input type="radio" name="gender" value="male" required>male
-              </label>
-
-            </div>
-            <div> &nbsp</div>
-            <div class="row">
-
-              <label class="col-sm-2 col-form-label col-form-label-lg">Your Age:</label>
-              <input type="number" step="any" name="age" required class="form-control" id="age" placeholder="Your Age" value="27">
-              <label>Years</label>
-            </div>
-
-            <div> &nbsp</div>
-            <div class="row">
-
-              <label class="col-sm-2 col-form-label col-form-label-lg">Waist Circumference:</label>
-              <input type="number" step="any" name="waist" class="form-control" id="waist" placeholder="">
-            </div>
-
-            <div> &nbsp</div>
-            <div class="row">
-
-              <label class="col-sm-2 col-form-label col-form-label-lg">Wrist Circumference:</label>
-              <input type="number" step="any" name="wrist" class="form-control" id="wrist" placeholder="">
-              <!--<label>Years</label>-->
-            </div>
-            <div> &nbsp</div>
-            <div class="row">
-
-              <label class="col-sm-2 col-form-label col-form-label-lg">Forearm Circumference:</label>
-              <input type="number" step="any" name="forearm" class="form-control" id="forearm" placeholder="">
-              <!--<label>Years</label>-->
-            </div>
-            <div> &nbsp</div>
-            <div class="row">
-
-              <label class="col-sm-2 col-form-label col-form-label-lg">Hip Circumference:</label>
-              <input type="number" step="any" name="hip" class="form-control" id="hip" placeholder="">
-              <!--<label>Years</label>-->
-            </div>
-            <div> &nbsp</div>
-            <div class="row">
-
-              <label class="col-sm-2 col-form-label col-form-label-lg">Body Fat Percentage:</label>
-              <input type="number" step="any" name="bodyFat" class="form-control" id="bodyFat" placeholder="">
-              <!--<label>Years</label>-->
-            </div>
-            <div> &nbsp</div>
-
-            <button id="cal2-button" type="submit" class="btn btn-primary">Calculate</button>
-            <button class="btn btn-primary clear">Clear</button>
-          </form>
-        </div>
-        <div id="menu2" class="tab-pane fade in active">
-          <div id="InstructionalVideoDiv" class="row">
-            <div>&nbsp</div>
-            <div class="col-md-6">
-              <iframe src="http://www.youtube.com/embed/hQWoq8D9xnE" width="560" height="315" frameborder="0" allowfullscreen></iframe>
-            </div>
-            <div class="col-md-6">
-              <iframe src="http://www.youtube.com/embed/iswCHPi_0Gs" width="560" height="315" frameborder="0" allowfullscreen></iframe>
-            </div>
-          </div>
-          <div>&nbsp</div>
-
-          <div class="row">
-            <div class="text-center">
-              <button id="videoPullDown" type="button" class="btn btn-default btn-sm">
-              <span class="glyphicon glyphicon-menu-down"></span> Instructional Videos
-              </button>
-            </div>
-          </div>
-          <div>&nbsp</div>
-
-          <div class="row">
-            <div class="col-md-4">
-              <div class="panel panel-default">
-                <div class="panel-heading">Jackson/Pollock 7 Caliper Method</div>
-                <div class="panel-body">
-                  <form id="caliper7" class="form-horizontal">
-                    <div> &nbsp</div>
-
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Chest</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-
-                      </div>
-                    </div>
-                    <div> &nbsp</div>
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Abdominal</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-
-                      </div>
-                    </div>
-                    <div> &nbsp</div>
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Thigh</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-
-                      </div>
-                    </div>
-                    <div> &nbsp</div>
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Tricep</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-
-                      </div>
-                    </div>
-                    <div> &nbsp</div>
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Subscapular</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-
-                      </div>
-                    </div>
-                    <div> &nbsp</div>
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Suprailic</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-
-                      </div>
-                    </div>
-                    <div> &nbsp</div>
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Midaxillary</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-
-                      </div>
-                    </div>
-                    <div> &nbsp</div>
-
-                    <div class="text-centered">
-                      <button id="cal1-button" type="submit" class="btn btn-primary">Calculate</button>
-                      <button class="btn btn-primary clear">Clear</button>
-                    </div>
-                  </form>
+    </nav>
+    <div class="container ">
+        <!--<h3>Right Aligned Navbar</h3>-->
+        <!--<p>The .navbar-right class is used to right-align navigation bar buttons.</p>-->
+        <div class="row col-md-12">
+            <ul class="nav nav-tabs">
+                <li><a data-toggle="tab" href="#tab1">BMI/BMR</a></li>
+                <li><a data-toggle="tab" href="#menu1">Navy Tape</a></li>
+                <li class="active"><a data-toggle="tab" href="#menu2">Caliper Method</a></li>
+                <li><a data-toggle="tab" href="#menu3">Calorie Counter</a></li>
+                <li><a data-toggle="tab" href="#menu4">History</a></li>
+                <!--<li><a data-toggle="tab" href="#menu3">Calorie Counter</a></li>-->
+            </ul>
+            <div class="tab-content">
+                <div id="tab1" class="tab-pane fade in ">
+                    <!--<h3>HOME</h3>-->
+                    <form id="cal1" class="form-inline">
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">Your Height:</label>
+                            <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                            <label>feet </label>
+                            <input type="number" name="inches" step="any" class="form-control mb-2 mr-sm-2 mb-sm-0" required id="inches" placeholder="Inches"
+                                value="10">
+                            <label>inches </label>
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg"> Weight:</label>
+                            <input type="number" name="weight" step="any" class="form-control" required id="weight" placeholder="Your Weight" value="170">
+                            <label>Pounds</label>
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">You are:</label>
+                            <label class="radio-inline">
+                                <input type="radio" name="gender" value="female" required>Female
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="gender" value="male" required>male
+                            </label>
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">Your Age:</label>
+                            <input type="number" step="any" name="age" required class="form-control" id="age" placeholder="Your Age" value="27">
+                            <label>Years</label>
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">Your BMI:</label>
+                            <input type="number" step="any" name="bmi" class="form-control" id="bmi" placeholder="">
+                            <!--<label>Years</label>-->
+                            <span class="label label-default" id="category"></span>
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">Your BMR:</label>
+                            <input type="number" step="any" name="bmr" class="form-control" id="bmr" placeholder="">
+                            <!--<label>Years</label>-->
+                        </div>
+                        <div> &nbsp</div>
+                        <button id="cal1-button" type="submit" class="btn btn-primary">Calculate</button>
+                        <button class="btn btn-primary clear">Clear</button>
+                    </form>
                 </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="panel panel-default">
-                <div class="panel-heading">Jackson/Pollock 3 Caliper Method</div>
-                <div class="panel-body">
-                  <form id="caliper7" class="form-horizontal">
-                    <div> &nbsp</div>
-
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Chest</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-
-                      </div>
-                    </div>
-                    <div> &nbsp</div>
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Abdominal</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-
-                      </div>
-                    </div>
-                    <div> &nbsp</div>
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Thigh</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-
-                      </div>
-                    </div>
-
-
-
-                    <div class="text-centered">
-                      <button id="cal1-button" type="submit" class="btn btn-primary">Calculate</button>
-                      <button class="btn btn-primary clear">Clear</button>
-                    </div>
-                  </form>
+                <div id="menu1" class="tab-pane fade">
+                    <form id="cal2" class="form-inline">
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">Your Height:</label>
+                            <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                            <label>feet </label>
+                            <input type="number" name="inches" step="any" class="form-control mb-2 mr-sm-2 mb-sm-0" required id="inches" placeholder="Inches"
+                                value="10">
+                            <label>inches </label>
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg"> Weight:</label>
+                            <input type="number" name="weight" step="any" class="form-control" required id="weight" placeholder="Your Weight" value="170">
+                            <label>Pounds</label>
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">You are:</label>
+                            <label class="radio-inline">
+                                <input type="radio" name="gender" value="female" required>Female
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="gender" value="male" required>male
+                            </label>
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">Your Age:</label>
+                            <input type="number" step="any" name="age" required class="form-control" id="age" placeholder="Your Age" value="27">
+                            <label>Years</label>
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">Waist Circumference:</label>
+                            <input type="number" step="any" name="waist" class="form-control" id="waist" placeholder="">
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">Wrist Circumference:</label>
+                            <input type="number" step="any" name="wrist" class="form-control" id="wrist" placeholder="">
+                            <!--<label>Years</label>-->
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">Forearm Circumference:</label>
+                            <input type="number" step="any" name="forearm" class="form-control" id="forearm" placeholder="">
+                            <!--<label>Years</label>-->
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">Hip Circumference:</label>
+                            <input type="number" step="any" name="hip" class="form-control" id="hip" placeholder="">
+                            <!--<label>Years</label>-->
+                        </div>
+                        <div> &nbsp</div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-lg">Body Fat Percentage:</label>
+                            <input type="number" step="any" name="bodyFat" class="form-control" id="bodyFat" placeholder="">
+                            <!--<label>Years</label>-->
+                        </div>
+                        <div> &nbsp</div>
+                        <button id="cal2-button" type="submit" class="btn btn-primary">Calculate</button>
+                        <button class="btn btn-primary clear">Clear</button>
+                    </form>
                 </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="panel panel-default">
-                <div class="panel-heading">Jackson/Pollock 4 Caliper Method</div>
-                <div class="panel-body">
-                  <form id="caliper7" class="form-horizontal">
-                    <div> &nbsp</div>
-
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Chest</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-
-                      </div>
+                <div id="menu2" class="tab-pane fade in active">
+                    <div id="InstructionalVideoDiv" class="row">
+                        <div>&nbsp</div>
+                        <div class="col-md-6">
+                            <iframe src="http://www.youtube.com/embed/hQWoq8D9xnE" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="col-md-6">
+                            <iframe src="http://www.youtube.com/embed/iswCHPi_0Gs" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+                        </div>
                     </div>
-                    <div> &nbsp</div>
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Abdominal</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
-
-                      </div>
+                    <div>&nbsp</div>
+                    <div class="row">
+                        <div class="text-center">
+                            <button id="videoPullDown" type="button" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-menu-down"></span> Instructional Videos
+                            </button>
+                        </div>
                     </div>
-                    <div> &nbsp</div>
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Thigh</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                    <div>&nbsp</div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Jackson/Pollock 7 Caliper Method</div>
+                                <div class="panel-body">
+                                    <form id="caliper7" class="form-horizontal">
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Chest</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="chest" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Abdominal</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="abdominal" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Thigh</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="thigh" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Tricep</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="tricep" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Subscapular</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="subscapular" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Suprailic</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="suprailic" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Midaxillary</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="midaxillary" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Your Age:</label>
+                                            <div class="col-sm-6">
+                                                <input type="number" name="age" step="any" class="form-control " required d="age" placeholder="age" value="5">
+                                                <!--<label>Years</label>-->
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
 
-                      </div>
-                    </div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">You are</label>
+                                            <div class="col-sm-6">
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="gender" value="female" required>Female
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="gender" value="male" required>male
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Body Fat Percentage</label>
+                                            <div class="col-sm-6">
+                                                <input type="number" name="bodyFat" step="any" class="form-control " required d="age" placeholder="age" value="5">
+                                                <!--<label>Years</label>-->
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="text-centered">
+                                            <button id="cal-pollock7-button" type="submit" class="btn btn-primary">Calculate</button>
+                                            <button class="btn btn-primary clear">Clear</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Jackson/Pollock 3 Caliper Method</div>
+                                <div class="panel-body">
+                                    <form id="caliper3" class="form-horizontal">
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Chest</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="chest" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Abdominal</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="abdominal" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Thigh</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="thigh" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Your Age:</label>
+                                            <div class="col-sm-6">
+                                                <input type="number" name="age" step="any" class="form-control " required d="age" placeholder="age" value="5">
+                                                <!--<label>Years</label>-->
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
 
-                    <div> &nbsp</div>
-                    <div class="form-group">
-                      <label for="inputType" class="col-sm-4 control-label">Suprailic</label>
-                      <div class="col-sm-6">
-                        <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
-                        <input type="number" name="feet" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">You are</label>
+                                            <div class="col-sm-6">
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="gender" value="female" required>Female
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="gender" value="male" required>male
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Body Fat Percentage</label>
+                                            <div class="col-sm-6">
+                                                <input type="number" name="bodyFat" step="any" class="form-control " d="age" placeholder="age" value="5">
+                                                <!--<label>Years</label>-->
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
 
-                      </div>
-                    </div>
-                    <div class="text-centered">
-                      <button id="cal1-button" type="submit" class="btn btn-primary">Calculate</button>
-                      <button class="btn btn-primary clear">Clear</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
+                                        <div class="text-centered">
+                                            <button id="cal-pollock3-button" type="submit" class="btn btn-primary">Calculate</button>
+                                            <button class="btn btn-primary clear">Clear</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Jackson/Pollock 4 Caliper Method</div>
+                                <div class="panel-body">
+                                    <form id="caliper4" class="form-horizontal">
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Chest</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="chest" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Abdominal</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="abdominal" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Thigh</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="thigh" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Suprailic</label>
+                                            <div class="col-sm-6">
+                                                <!--<input type="text" class="form-control" id="inputCity" placeholder="Input text">-->
+                                                <input type="number" name="suprailic" step="any" class="form-control " required d="feet" placeholder="Feet" value="5">
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Your Age:</label>
+                                            <div class="col-sm-6">
+                                                <input type="number" name="age" step="any" class="form-control " required d="age" placeholder="age" value="5">
+                                                <!--<label>Years</label>-->
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
 
-            <!--<div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">You are</label>
+                                            <div class="col-sm-6">
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="gender" value="female" required>Female
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="gender" value="male" required>male
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+                                        <div class="form-group">
+                                            <label for="inputType" class="col-sm-4 control-label">Body Fat Percentage</label>
+                                            <div class="col-sm-6">
+                                                <input type="number" name="bodyFat" step="any" class="form-control " required d="age" placeholder="age" value="5">
+                                                <!--<label>Years</label>-->
+                                            </div>
+                                        </div>
+                                        <div> &nbsp</div>
+
+                                        <div class="text-centered">
+                                            <button id="cal-pollock4-button" type="submit" class="btn btn-primary">Calculate</button>
+                                            <button class="btn btn-primary clear">Clear</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="col-md-4">
               <div class="panel panel-default">
                 <div class="panel-heading">Parrillo Caliper Method</div>
                 <div class="">Panel Content</div>
               </div>
             </div>-->
-          </div>
+                    </div>
+                </div>
+                <div id="menu3" class="tab-pane fade">
+                    <h3>Menu 3</h3>
+                    <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                    <iframe src="http://www.youtube.com/embed/W7qWa52k-nE" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div id="menu4" class="tab-pane fade in ">
+                    <!--<p>this is the histry</p>-->
+                    <div id="history">
+                    </div>
+                    <table id="historyTable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Method</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div id="menu3" class="tab-pane fade">
-          <h3>Menu 3</h3>
-          <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-          <iframe src="http://www.youtube.com/embed/W7qWa52k-nE" width="560" height="315" frameborder="0" allowfullscreen></iframe>
-        </div>
-
-
-        <div id="menu4" class="tab-pane fade in ">
-          <p>this is the histry</p>
-          <div id="history">
-
-          </div>
-
-        </div>
-      </div>
+        <!--<div class="pull-right col-md-6"> kko</div>-->
     </div>
-    <!--<div class="pull-right col-md-6"> kko</div>-->
-  </div>
 </body>
 
 </html>
